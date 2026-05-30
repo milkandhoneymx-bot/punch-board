@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Punch Board — Golpea lo que te resuene</title>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --electric-blue: #2118CE;
+    --explosive-yellow: #FFE500;
+    --furious-fire: #FD6231;
+    --neon-knockout: #6DE52C;
+    --punch-bag: #000000;
+    --white: #ffffff;
+    --off-white: #f5f5f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--punch-bag);
+    color: var(--white);
+    font-family: 'Arimo', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: var(--punch-bag);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 8vw;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -80px;
+    width: 700px; height: 700px;
+    background: var(--furious-fire);
+    clip-path: polygon(20% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%, 0% 20%);
+    opacity: 0.13;
+    transform: rotate(-15deg);
+  }
+
+  .hero-label {
+    font-family: 'Arimo', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--neon-knockout);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-title {
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 900;
+    line-height: 0.92;
+    text-transform: uppercase;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+
+  .hero-title span.punch { color: var(--furious-fire); }
+  .hero-title span.board { color: var(--explosive-yellow); }
+
+  .hero-tagline {
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    color: rgba(255,255,255,0.55);
+    margin-top: 1.8rem;
+    max-width: 480px;
+    line-height: 1.6;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .hero-cta {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.45s ease both;
+  }
+
+  .btn {
+    padding: 0.9rem 2.2rem;
+    font-family: 'Arimo', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+
+  .btn-primary {
+    background: var(--furious-fire);
+    color: var(--white);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    border: 2px solid rgba(255,255,255,0.3);
+  }
+
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(253,98,49,0.35); }
+
+  .hero-diagonal {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 45vw; height: 100%;
+    background: var(--furious-fire);
+    clip-path: polygon(35% 0%, 100% 0%, 100% 100%, 0% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .hero-diagonal::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 18px,
+      rgba(0,0,0,0.08) 18px,
+      rgba(0,0,0,0.08) 20px
+    );
+  }
+
+  .hero-fist {
+    font-size: 12rem;
+    filter: drop-shadow(0 0 60px rgba(0,0,0,0.4));
+    animation: punchIn 0.9s 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    position: relative;
+    z-index: 2;
+    margin-left: 8vw;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 6vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .nav-brand {
+    font-weight: 900;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .nav-brand span { color: var(--furious-fire); }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--explosive-yellow); }
+
+  /* CONCEPT */
+  .concept {
+    padding: 8rem 8vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    background: var(--off-white);
+    color: var(--punch-bag);
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--furious-fire);
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+  }
+
+  .concept p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: rgba(0,0,0,0.65);
+    max-width: 500px;
+  }
+
+  .concept p + p { margin-top: 1rem; }
+
+  .concept-visual {
+    background: var(--punch-bag);
+    padding: 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .phrase-card {
+    padding: 1.2rem 1rem;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 1.3;
+    color: var(--punch-bag);
+    transition: transform 0.2s;
+  }
+
+  .phrase-card:hover { transform: scale(1.04) rotate(-1deg); }
+  .phrase-card.blue { background: var(--electric-blue); color: var(--white); }
+  .phrase-card.green { background: var(--neon-knockout); }
+  .phrase-card.orange { background: var(--furious-fire); color: var(--white); }
+  .phrase-card.yellow { background: var(--explosive-yellow); }
+
+  /* HOW IT WORKS */
+  .how {
+    padding: 8rem 8vw;
+    background: var(--punch-bag);
+  }
+
+  .how-header {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+
+  .how-header .section-label { color: var(--neon-knockout); }
+  .how-header .section-title { color: var(--white); }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+  }
+
+  .step {
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 2.5rem 2rem;
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .step:hover {
+    border-color: var(--furious-fire);
+    transform: translateY(-6px);
+  }
+
+  .step-num {
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.06);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .step-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+
+  .step h3 {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.8rem;
+    color: var(--explosive-yellow);
+  }
+
+  .step p {
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* SPECS */
+  .specs {
+    padding: 8rem 8vw;
+    background: var(--electric-blue);
+    color: var(--white);
+  }
+
+  .specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .specs-list {
+    margin-top: 2rem;
+    list-style: none;
+  }
+
+  .specs-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    font-size: 0.9rem;
+  }
+
+  .specs-list li span:first-child {
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+  }
+
+  .specs-list li span:last-child {
+    font-weight: 700;
+    color: var(--explosive-yellow);
+  }
+
+  .spec-visual {
+    background: rgba(0,0,0,0.2);
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .material-item {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1rem 1.2rem;
+    background: rgba(255,255,255,0.07);
+    border-left: 3px solid var(--furious-fire);
+  }
+
+  .material-icon { font-size: 1.6rem; }
+
+  .material-info h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .material-info p {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.55);
+    margin-top: 0.2rem;
+  }
+
+  /* BRANDING */
+  .branding {
+    padding: 8rem 8vw;
+    background: var(--off-white);
+    color: var(--punch-bag);
+  }
+
+  .palette-row {
+    display: flex;
+    gap: 0;
+    height: 160px;
+    margin-top: 3rem;
+    overflow: hidden;
+  }
+
+  .color-swatch {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: flex 0.4s ease;
+    cursor: default;
+  }
+
+  .color-swatch:hover { flex: 2.5; }
+  .swatch-name { margin-bottom: 0.2rem; }
+  .swatch-hex { opacity: 0.7; }
+
+  .sw-blue { background: var(--electric-blue); color: var(--white); }
+  .sw-yellow { background: var(--explosive-yellow); color: var(--punch-bag); }
+  .sw-orange { background: var(--furious-fire); color: var(--white); }
+  .sw-green { background: var(--neon-knockout); color: var(--punch-bag); }
+  .sw-black { background: var(--punch-bag); color: var(--white); }
+
+  .typo-section {
+    margin-top: 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .typo-card {
+    background: var(--punch-bag);
+    color: var(--white);
+    padding: 2rem;
+  }
+
+  .typo-card .role {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--furious-fire);
+    margin-bottom: 0.8rem;
+  }
+
+  .typo-sample-gridlock {
+    font-size: 2.5rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--explosive-yellow);
+    font-family: 'Arimo', sans-serif;
+    text-transform: uppercase;
+  }
+
+  .typo-sample-impact {
+    font-family: Impact, 'Arial Narrow', sans-serif;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--electric-blue);
+    text-transform: uppercase;
+  }
+
+  .typo-sample-arimo {
+    font-family: 'Arimo', sans-serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .typo-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-top: 0.8rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* TEAM */
+  .team {
+    padding: 8rem 8vw;
+    background: var(--punch-bag);
+    text-align: center;
+  }
+
+  .team .section-title { color: var(--white); }
+  .team .section-label { color: var(--neon-knockout); }
+
+  .team-cards {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 4rem;
+    flex-wrap: wrap;
+  }
+
+  .team-card {
+    width: 220px;
+    padding: 2.5rem 1.5rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .team-card:hover {
+    border-color: var(--explosive-yellow);
+    transform: translateY(-6px);
+  }
+
+  .team-avatar {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: var(--furious-fire);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 1.2rem;
+  }
+
+  .team-card h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--white);
+  }
+
+  .team-card p {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.4);
+    margin-top: 0.3rem;
+  }
+
+  /* FOOTER */
+  footer {
+    background: #0a0a0a;
+    padding: 3rem 8vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  footer .brand {
+    font-weight: 900;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--white);
+  }
+
+  footer .brand span { color: var(--furious-fire); }
+
+  footer p {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .footer-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.35);
+  }
+
+  /* COST STRIP */
+  .cost-strip {
+    background: var(--explosive-yellow);
+    color: var(--punch-bag);
+    padding: 4rem 8vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .cost-strip h2 {
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .cost-big {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .cost-note {
+    font-size: 0.8rem;
+    opacity: 0.65;
+    margin-top: 0.3rem;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes punchIn {
+    from { opacity: 0; transform: translateX(80px) scale(0.7) rotate(15deg); }
+    to   { opacity: 1; transform: translateX(0) scale(1) rotate(0deg); }
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero-diagonal { display: none; }
+    .concept { grid-template-columns: 1fr; gap: 3rem; }
+    .steps { grid-template-columns: 1fr; }
+    .specs-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .typo-section { grid-template-columns: 1fr; }
+    .hero-title { font-size: clamp(2.8rem, 12vw, 5rem); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">The <span>Punch</span> Board</a>
+  <ul class="nav-links">
+    <li><a href="#concepto">Concepto</a></li>
+    <li><a href="#como">Cómo funciona</a></li>
+    <li><a href="#specs">Specs</a></li>
+    <li><a href="#branding">Branding</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="padding-top:80px;">
+  <span class="hero-label">Diseño e Innovación · Tec de Monterrey</span>
+  <h1 class="hero-title">
+    THE<br>
+    <span class="punch">PUNCH</span><br>
+    <span class="board">BOARD</span>
+  </h1>
+  <p class="hero-tagline">
+    Golpea lo que te resuene. Una experiencia interactiva que desafía los estereotipos de la masculinidad hegemónica.
+  </p>
+  <div class="hero-cta">
+    <a href="#concepto" class="btn btn-primary">Ver el proyecto</a>
+    <a href="#specs" class="btn btn-secondary">Especificaciones</a>
+  </div>
+  <div class="hero-diagonal">
+    <div class="hero-fist">🥊</div>
+  </div>
+</section>
+
+<!-- CONCEPT -->
+<section class="concept" id="concepto">
+  <div class="reveal">
+    <span class="section-label">01 — Conceptual Development</span>
+    <h2 class="section-title">Golpea lo que<br>te resuene</h2>
+    <p>
+      Desarrollamos "The Punch Board" en torno a la problemática de la masculinidad hegemónica, que afecta a la mayoría de los hombres en el mundo.
+    </p>
+    <p>
+      Creamos un juego donde las personas sienten la adrenalina que normalmente buscan, experimentando emociones intensas a través de la dinámica del golpe — mientras cuestionan frases que aceptamos sin saber que son tóxicas.
+    </p>
+    <p style="margin-top:1.5rem; font-weight:700; color: var(--furious-fire);">
+      Queremos representar la ruptura de estos estereotipos.
+    </p>
+  </div>
+  <div class="concept-visual reveal">
+    <div class="phrase-card blue">Un hombre toma iniciativa</div>
+    <div class="phrase-card green">Si te llevas, te aguantas</div>
+    <div class="phrase-card yellow">Yo puedo solo, no necesito a nadie</div>
+    <div class="phrase-card orange">Eso es de maricas</div>
+    <div class="phrase-card green">¿Vamos a pistear o traes correa?</div>
+    <div class="phrase-card blue">¿Enculado? Nah, es mi naturaleza</div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="como">
+  <div class="how-header reveal">
+    <span class="section-label">02 — Mecánica del juego</span>
+    <h2 class="section-title">¿Cómo funciona?</h2>
+  </div>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">01</div>
+      <span class="step-icon">🥊</span>
+      <h3>Ponte los guantes</h3>
+      <p>El uso de guantes hace la experiencia más inmersiva y protege al usuario del contacto físico directo con los materiales.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">02</div>
+      <span class="step-icon">👊</span>
+      <h3>Elige tu frase</h3>
+      <p>7 módulos de impacto distribuidos simétricamente. Cada uno contiene una frase de masculinidad tóxica que "te resuene" golpear.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">03</div>
+      <span class="step-icon">🏆</span>
+      <h3>Suma en el Scoreboard</h3>
+      <p>El marcador registra cada impacto. La distribución simétrica permite que usuarios diestros y zurdos tengan el mismo ángulo de ataque.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section class="specs" id="specs">
+  <div class="specs-grid">
+    <div class="reveal">
+      <span class="section-label" style="color:var(--explosive-yellow)">03 — Especificaciones técnicas</span>
+      <h2 class="section-title">Ingeniería<br>del impacto</h2>
+      <ul class="specs-list">
+        <li><span>Altura total</span><span>1,700 mm</span></li>
+        <li><span>Ancho</span><span>1,210 mm</span></li>
+        <li><span>Módulos de impacto</span><span>7 unidades</span></li>
+        <li><span>Módulo (dimensión)</span><span>240 × 240 mm</span></li>
+        <li><span>Estructura</span><span>PTR 1"×1" Cal.20</span></li>
+        <li><span>Perfil conector</span><span>PTR 1¼"×1¼" Cal.14</span></li>
+        <li><span>Panel frontal</span><span>Coroplast 4 mm</span></li>
+        <li><span>Zona de impacto óptima</span><span>1,100 – 1,600 mm</span></li>
+        <li><span>Escala técnica</span><span>1:15</span></li>
+        <li><span>Costo total materiales</span><span>$5,831.95 MXN</span></li>
+      </ul>
+    </div>
+    <div class="spec-visual reveal">
+      <div class="material-item">
+        <span class="material-icon">🔩</span>
+        <div class="material-info">
+          <h4>Estructura PTR — Acero al carbono</h4>
+          <p>Perfil cuadrado 1"×1" Cal.20. Alta reciclabilidad, no pierde propiedades estructurales. Manufactura desde chatarra reduce energía hasta 95%.</p>
+        </div>
+      </div>
+      <div class="material-item">
+        <span class="material-icon">🟦</span>
+        <div class="material-info">
+          <h4>Panel Coroplast — Polipropileno</h4>
+          <p>100% reciclable. Alta reusabilidad, diseño ligero. Alternativa eco-friendly al cartón de un solo uso. Resistencia química sin subproductos tóxicos.</p>
+        </div>
+      </div>
+      <div class="material-item">
+        <span class="material-icon">🎨</span>
+        <div class="material-info">
+          <h4>Vinil impreso — Gráficos</h4>
+          <p>Gráficos de alta calidad. Se recomienda vinil PVC-free con tintas de base agua para reducir impacto ambiental.</p>
+        </div>
+      </div>
+      <div class="material-item">
+        <span class="material-icon">⚙️</span>
+        <div class="material-info">
+          <h4>Conectores — Hierro fundido</h4>
+          <p>Tipos: Three Way Elbow 90°, Corner with Through Tube 90°, Short Tee. Todos Typ 18S/20S/02S-25-B de 25mm.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COST STRIP -->
+<div class="cost-strip reveal">
+  <div>
+    <h2>Inversión total<br>en materiales</h2>
+    <p style="font-size:0.85rem; opacity:0.6; margin-top:0.5rem;">14 componentes · 1 unidad funcional</p>
+  </div>
+  <div style="text-align:right;">
+    <div class="cost-big">$5,831.95</div>
+    <div class="cost-note">Pesos mexicanos (MXN)</div>
+  </div>
+</div>
+
+<!-- BRANDING -->
+<section class="branding" id="branding">
+  <span class="section-label">04 — Manual de marca</span>
+  <h2 class="section-title">Identidad visual</h2>
+
+  <div class="palette-row reveal">
+    <div class="color-swatch sw-blue">
+      <div class="swatch-name">Electric Blue</div>
+      <div class="swatch-hex">#2118CE</div>
+    </div>
+    <div class="color-swatch sw-yellow">
+      <div class="swatch-name">Explosive Yellow</div>
+      <div class="swatch-hex">#FFE500</div>
+    </div>
+    <div class="color-swatch sw-orange">
+      <div class="swatch-name">Furious Fire</div>
+      <div class="swatch-hex">#FD6231</div>
+    </div>
+    <div class="color-swatch sw-green">
+      <div class="swatch-name">Neon Knock-Out</div>
+      <div class="swatch-hex">#6DE52C</div>
+    </div>
+    <div class="color-swatch sw-black">
+      <div class="swatch-name">Punch Bag</div>
+      <div class="swatch-hex">#000000</div>
+    </div>
+  </div>
+
+  <div class="typo-section reveal">
+    <div class="typo-card">
+      <div class="role">Tipografía principal</div>
+      <div class="typo-sample-gridlock">Punch Board</div>
+      <div class="typo-name">Gridlock</div>
+      <p style="font-size:0.75rem; color:rgba(255,255,255,0.4); margin-top:0.5rem;">Títulos, headings, callouts arcade.</p>
+    </div>
+    <div class="typo-card">
+      <div class="role">Tipografía secundaria</div>
+      <div class="typo-sample-impact">THE</div>
+      <div class="typo-name">Impact</div>
+      <p style="font-size:0.75rem; color:rgba(255,255,255,0.4); margin-top:0.5rem;">Subencabezados, banners, etiquetas cortas.</p>
+    </div>
+    <div class="typo-card">
+      <div class="role">Tipografía complementaria</div>
+      <div class="typo-sample-arimo">ABCDEFGHIJKLMN<br>abcdefghijklmnñop<br>123456789¡!</div>
+      <div class="typo-name">Arimo</div>
+      <p style="font-size:0.75rem; color:rgba(255,255,255,0.4); margin-top:0.5rem;">Cuerpo de texto, instrucciones, contenido secundario.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team" id="equipo">
+  <span class="section-label">05 — Equipo</span>
+  <h2 class="section-title">Diseño e Innovación</h2>
+  <div class="team-cards">
+    <div class="team-card reveal">
+      <div class="team-avatar">👩‍🎨</div>
+      <h3>Sarah Castillejos</h3>
+      <p>Diseño e Innovación</p>
+    </div>
+    <div class="team-card reveal">
+      <div class="team-avatar">👩‍💻</div>
+      <h3>Valeria González</h3>
+      <p>Diseño e Innovación</p>
+    </div>
+    <div class="team-card reveal">
+      <div class="team-avatar">✏️</div>
+      <h3>Camila Enríquez</h3>
+      <p>Diseño e Innovación</p>
+    </div>
+  </div>
+  <p style="margin-top:3rem; font-size:0.82rem; color:rgba(255,255,255,0.25);">
+    Especificación de Productos y Servicios — 3er Bloque<br>
+    Profesoras: Griselda Oyervides, Rosalinda López · Tecnológico de Monterrey
+  </p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="brand">The <span>Punch</span> Board!</div>
+  <p>Golpea lo que te resuene.</p>
+  <div class="footer-badge">
+    <span>🏫</span>
+    <span>Tecnológico de Monterrey · 2026</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // Smooth scroll for nav
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+
+</body>
+</html>
